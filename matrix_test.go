@@ -112,17 +112,11 @@ func TestIndexConversionConsistency(t *testing.T) {
 // TestMatrixMultiplicationConsistency тестирует, что последовательная и параллельная версии дают одинаковый результат
 func TestMatrixMultiplicationConsistency(t *testing.T) {
     // Создаем тестовые матрицы
-    lhs := &Matrix{
-        X:    3,
-        P:    2,
-        Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9},
-    }
+    lhs := CreateMatrix(3,2)
+	lhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-    rhs := &Matrix{
-        X:    3,
-        P:    2,
-        Data: []uint32{9, 8, 7, 6, 5, 4, 3, 2, 1},
-    }
+    rhs := CreateMatrix(3,2)
+	rhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
     // Тестируем различные параметры
     params := []struct {
@@ -153,18 +147,12 @@ func TestMatrixMultiplicationConsistency(t *testing.T) {
 // TestMatrixProperties тестирует свойства матричных операций
 func TestMatrixProperties(t *testing.T) {
     // Создаем тестовую матрицу
-    matrix := &Matrix{
-        X:    2,
-        P:    2,
-        Data: []uint32{1, 2, 3, 4},
-    }
+	matrix := CreateMatrix(2, 2)
+	matrix.Data = []uint32{1, 2, 3, 4}
 
     // Создаем нулевую матрицу
-    zeroMatrix := &Matrix{
-        X:    2,
-        P:    2,
-        Data: []uint32{0, 0, 0, 0},
-    }
+	zeroMatrix := CreateMatrix(2, 2)
+	matrix.Data = []uint32{0, 0, 0, 0}
 
     t.Run("Multiplication with zero matrix", func(t *testing.T) {
         // Умножение на нулевую матрицу должно дать матрицу определенной размерности
@@ -192,8 +180,11 @@ func TestMatrixProperties(t *testing.T) {
 // TestEdgeCases тестирует граничные случаи
 func TestEdgeCases(t *testing.T) {
     t.Run("Single element matrices", func(t *testing.T) {
-        a := &Matrix{X: 2, P: 1, Data: []uint32{5, 3}}
-        b := &Matrix{X: 2, P: 1, Data: []uint32{3, 5}}
+        a := CreateMatrix(2, 1)
+		a.Data = []uint32{5, 3}
+
+        b := CreateMatrix(2, 1)
+		b.Data = []uint32{3, 5}
 
         result := a.Multiplication(0, 0, b)
 
@@ -206,8 +197,11 @@ func TestEdgeCases(t *testing.T) {
     })
 
     t.Run("Different sizes", func(t *testing.T) {
-        a := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
-        b := &Matrix{X: 3, P: 1, Data: []uint32{1, 2, 3}}
+        a := CreateMatrix(3, 2)
+		a.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+        b := CreateMatrix(3, 1)
+		b.Data = []uint32{1, 2, 3}
 
         // Это должно работать, если логика умножения поддерживает разные размерности
         result := a.Multiplication(0, 1, b)
@@ -234,8 +228,8 @@ func TestResultMatrixDimensions(t *testing.T) {
 
     for _, tc := range testCases {
         t.Run(fmt.Sprintf("pA=%d_pB=%d_lambda=%d_mu=%d", tc.pA, tc.pB, tc.lambda, tc.mu), func(t *testing.T) {
-            a := &Matrix{X: 2, P: tc.pA, Data: make([]uint32, int(math.Pow(2, float64(tc.pA))))}
-            b := &Matrix{X: 2, P: tc.pB, Data: make([]uint32, int(math.Pow(2, float64(tc.pB))))}
+			a := CreateMatrix(2, tc.pA)
+			b := CreateMatrix(2, tc.pB)
 
             result := a.Multiplication(tc.lambda, tc.mu, b)
 
@@ -256,8 +250,11 @@ func TestKnownMultiplicaton(t *testing.T) {
     t.Helper()
 
     t.Run("3*3 X 3*3 (1,1)", func(t *testing.T) {
-        lhs := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
-        rhs := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
+        lhs := CreateMatrix(3, 2)
+		lhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+		rhs := CreateMatrix(3, 2)
+        rhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
         res := []uint32{14, 77, 194}
         res1 := lhs.Multiplication(1, 1, rhs)
@@ -279,8 +276,11 @@ func TestKnownMultiplicaton(t *testing.T) {
     })
 
     t.Run("3*3 X 3*1 (0,1)", func(t *testing.T) {
-        lhs := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
-        rhs := &Matrix{X: 3, P: 1, Data: []uint32{1, 2, 3}}
+		lhs := CreateMatrix(3, 2)
+        lhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+		rhs := CreateMatrix(3, 1)
+        rhs.Data = []uint32{1, 2, 3}
 
         res := []uint32{14, 32, 50}
         res1 := lhs.Multiplication(0, 1, rhs)
@@ -302,8 +302,11 @@ func TestKnownMultiplicaton(t *testing.T) {
     })
 
     t.Run("3*3 X 3*3 (0,1)", func(t *testing.T) {
-        lhs := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
-        rhs := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
+		lhs := CreateMatrix(3, 2)
+        lhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+		rhs := CreateMatrix(3, 2)
+        rhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
         res := []uint32{30, 36, 42, 66, 81, 96, 102, 126, 150}
         res1 := lhs.Multiplication(0, 1, rhs)
@@ -325,8 +328,11 @@ func TestKnownMultiplicaton(t *testing.T) {
     })
 
     t.Run("3*3 X 3*3 (1,0)", func(t *testing.T) {
-        lhs := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
-        rhs := &Matrix{X: 3, P: 2, Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}}
+        lhs := CreateMatrix(3, 2)
+		lhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+		rhs := CreateMatrix(3, 2)
+        rhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
         res := []uint32{1, 2, 3, 8, 10, 12, 21, 24, 27, 4, 8, 12, 20, 25, 30, 42, 48, 54, 7, 14, 21, 32, 40, 48, 63, 72, 81}
         res1 := lhs.Multiplication(1, 0, rhs)
@@ -351,22 +357,15 @@ func TestKnownMultiplicaton(t *testing.T) {
 // Benchmark тесты для измерения производительности
 func BenchmarkMultiplications(b *testing.B) {
     // Создаем матрицы для бенчмарков
-    lhs := &Matrix{
-        X:    3,
-        P:    3,
-        Data: make([]uint32, 27), // 3^3 = 27
-    }
+	lhs := CreateMatrix(3, 3)
 
     // Заполняем данными
     for i := range lhs.Data {
         lhs.Data[i] = uint32(i % 5)
     }
 
-    rhs := &Matrix{
-        X:    3,
-        P:    3,
-        Data: make([]uint32, 27),
-    }
+
+	rhs := CreateMatrix(3, 3)
 
     for i := range rhs.Data {
         rhs.Data[i] = uint32((i + 2) % 5)
@@ -419,7 +418,7 @@ func BenchmarkMultiplicationsWithDetails(b *testing.B) {
             
             // Запускаем бенчмарк
             for i := 0; i < b.N; i++ {
-                lhs.Multiplication(config.lambda, config.mu, &rhs)
+                lhs.Multiplication(config.lambda, config.mu, rhs)
             }
         })
     }
@@ -457,7 +456,7 @@ func BenchmarkParallelMultiplicationsWithDetails(b *testing.B) {
             
             // Запускаем бенчмарк
             for i := 0; i < b.N; i++ {
-                lhs.ParallelMultiplication(config.lambda, config.mu, &rhs)
+                lhs.ParallelMultiplication(config.lambda, config.mu, rhs)
             }
         })
     }
@@ -499,7 +498,7 @@ func BenchmarkBigMultiplications(b *testing.B) {
             
             // Запускаем бенчмарк
             for i := 0; i < b.N; i++ {
-                lhs.ParallelMultiplication(config.lambda, config.mu, &rhs)
+                lhs.ParallelMultiplication(config.lambda, config.mu, rhs)
             }
         })
         b.Run(config.name + "_Sequential", func(b *testing.B) {
@@ -509,7 +508,7 @@ func BenchmarkBigMultiplications(b *testing.B) {
             
             // Запускаем бенчмарк
             for i := 0; i < b.N; i++ {
-                lhs.Multiplication(config.lambda, config.mu, &rhs)
+                lhs.Multiplication(config.lambda, config.mu, rhs)
             }
         })
     }

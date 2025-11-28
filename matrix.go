@@ -12,8 +12,8 @@ type Matrix struct {
 	Data []uint32
 }
 
-func CreateMatrix(X, P uint32) Matrix {
-	return Matrix{X, P, make([]uint32, int(math.Pow(float64(X), float64(P))))}
+func CreateMatrix(X, P uint32) *Matrix {
+	return &Matrix{X, P, make([]uint32, int(math.Pow(float64(X), float64(P))))}
 }
 
 // Multiplication выполняет матричное умножение с заданными параметрами lambda и mu
@@ -28,11 +28,7 @@ func (m *Matrix) Multiplication(lambda, mu uint32, other *Matrix) *Matrix {
 
 	// Вычисление результирующей размерности
 	resultP := (m.P - lambda - mu) + (other.P - lambda - mu) + lambda
-	matrixResult := &Matrix{
-		X:    m.X,
-		P:    resultP,
-		Data: make([]uint32, int(math.Pow(float64(m.X), float64(resultP)))),
-	}
+	matrixResult := CreateMatrix(m.X, resultP)
 
 	// Предварительные вычисления
 	muPower := uint32(math.Pow(float64(m.X), float64(mu)))
@@ -93,11 +89,7 @@ func (m *Matrix) ParallelMultiplication(lambda, mu uint32, other *Matrix) *Matri
 	// Вычисление результирующей размерности
 	resultP := (m.P - lambda - mu) + (other.P - lambda - mu) + lambda
 	size := int(math.Pow(float64(m.X), float64(resultP)))
-	matrixResult := &Matrix{
-		X:    m.X,
-		P:    resultP,
-		Data: make([]uint32, size),
-	}
+	matrixResult := CreateMatrix(m.X, resultP)
 
 	var wg sync.WaitGroup
 	workers := runtime.NumCPU()

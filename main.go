@@ -8,16 +8,11 @@ import (
 func main() {
 	fmt.Println("Starting Matrix Program...")
 
-	lhs := &Matrix{
-		X:    3,
-		P:    2,
-		Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9},
-	}
-	rhs := &Matrix{
-		X:    3,
-		P:    2,
-		Data: []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9},
-	}
+	lhs := CreateMatrix(3,2)
+	lhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	
+	rhs := CreateMatrix(3,2)
+	rhs.Data = []uint32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 	// Тестируем оба метода
 	res1 := lhs.Multiplication(0, 1, rhs)
