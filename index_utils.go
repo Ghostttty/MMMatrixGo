@@ -27,14 +27,14 @@ func calculateIndexToArray(p uint32, x uint32, index int) []uint32 {
 }
 
 func incrementToIndexVector(vec []uint32, lastIndex int, base uint32) {
-    for i := lastIndex; i >= 0; i-- {
-        if vec[i] == base-1 {
-            vec[i] = 0
-        } else {
-            vec[i]++
-            return
-        }
-    }
+	for i := lastIndex; i >= 0; i-- {
+		if vec[i] == base-1 {
+			vec[i] = 0
+		} else {
+			vec[i]++
+			return
+		}
+	}
 }
 
 func filledZeroVector(vec []uint32, startIdx int, mu uint32) {
