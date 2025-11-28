@@ -26,20 +26,18 @@ func calculateIndexToArray(p uint32, x uint32, index int) []uint32 {
 	return resultVector
 }
 
-func incrementToIndexVector(vec []uint32, startIdx int, alignIncrement uint32) []uint32 {
-	idx := startIdx
-	for {
-		if vec[idx] == alignIncrement-1 {
-			vec[idx] = 0
-			idx--
-		} else {
-			vec[idx]++
-			return vec
-		}
-	}
+func incrementToIndexVector(vec []uint32, lastIndex int, base uint32) {
+    for i := lastIndex; i >= 0; i-- {
+        if vec[i] == base-1 {
+            vec[i] = 0
+        } else {
+            vec[i]++
+            return
+        }
+    }
 }
 
-func filledZeroVector(vec []uint32, startIdx int, mu uint32) []uint32 {
+func filledZeroVector(vec []uint32, startIdx int, mu uint32) {
 	idxCursor := startIdx
 	for i := uint32(0); i < mu; i++ {
 		vec[idxCursor] = 0
@@ -48,5 +46,4 @@ func filledZeroVector(vec []uint32, startIdx int, mu uint32) []uint32 {
 		}
 		idxCursor--
 	}
-	return vec
 }

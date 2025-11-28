@@ -54,8 +54,8 @@ func (m *Matrix) Multiplication(lambda, mu uint32, other *Matrix) *Matrix {
 					other.Data[calculateIndexFromArray(indexRHS, other.X)]
 
 				if sumIdx+1 < muPower {
-					indexLHS = incrementToIndexVector(indexLHS, lastLHSIndex, m.X)
-					indexRHS = incrementToIndexVector(indexRHS, lastRHSIndex, m.X)
+					incrementToIndexVector(indexLHS, lastLHSIndex, m.X)
+					incrementToIndexVector(indexRHS, lastRHSIndex, m.X)
 				}
 			}
 		} else {
@@ -67,8 +67,8 @@ func (m *Matrix) Multiplication(lambda, mu uint32, other *Matrix) *Matrix {
 		matrixResult.Data[idx] = tempValue
 
 		// Сброс индексов для следующей итерации
-		indexLHS = filledZeroVector(indexLHS, lastLHSIndex, mu)
-		indexRHS = filledZeroVector(indexRHS, lastRHSIndex, mu)
+		filledZeroVector(indexLHS, lastLHSIndex, mu)
+		filledZeroVector(indexRHS, lastRHSIndex, mu)
 
 		// Обновление индексов результата
 		if idx+1 < len(matrixResult.Data) {
@@ -151,8 +151,8 @@ func (m *Matrix) multiplicationWorker(lambda, mu uint32, other, result *Matrix, 
 						other.Data[calculateIndexFromArray(indexRHS, other.X)]
 
 					if sumIdx+1 < muPower {
-						indexLHS = incrementToIndexVector(indexLHS, lastLHSIndex, m.X)
-						indexRHS = incrementToIndexVector(indexRHS, lastRHSIndex, m.X)
+						incrementToIndexVector(indexLHS, lastLHSIndex, m.X)
+						incrementToIndexVector(indexRHS, lastRHSIndex, m.X)
 					}
 				}
 			} else {
