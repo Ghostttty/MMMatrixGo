@@ -513,6 +513,82 @@ func BenchmarkBigMultiplications(b *testing.B) {
 	}
 }
 
+func generatePairs(lhsP, rhsP uint32) [][2]uint32 {
+	var pairs [][2]uint32
+
+	for l := uint32(0); l <= min(lhsP, rhsP); l++ {
+		for m := uint32(0); m <= min(lhsP, rhsP); m++ {
+			if l == m && m == 0 {
+				continue
+			}
+
+			if l+m > min(lhsP, rhsP) {
+				continue
+			}
+
+			if lhsP == rhsP && m == rhsP {
+				continue
+			}
+
+			pairs = append(pairs, [2]uint32{l, m})
+		}
+	}
+
+	return pairs
+}
+
+func BenchmarkFullTest(b *testing.B) {
+	X := uint32(10)
+
+	for lhsP := uint32(2); lhsP < 4; lhsP++ {
+
+		lhs := CreateMatrix(X, lhsP)
+
+		// Заполняем данными
+		for i := range lhs.Data {
+			lhs.Data[i] = uint32(i % 5)
+		}
+
+		for rhsP := uint32(1); rhsP <= lhsP; rhsP++ {
+
+			rhs := CreateMatrix(X, rhsP)
+
+			for i := range rhs.Data {
+				rhs.Data[i] = uint32((i + 2) % 5)
+			}
+
+			b.ResetTimer()
+
+			for _, pair := range generatePairs(lhsP, rhsP) {
+				lambda := pair[0]
+				mu := pair[1]
+
+				b.Run(fmt.Sprintf("Parallel lhs P=%d rhs P=%d lambda=%d mu=%d", lhsP, rhsP, lambda, mu), func(b *testing.B) {
+					// Сбрасываем таймер после настройки
+					b.ReportAllocs()
+					b.ResetTimer()
+
+					// Запускаем бенчмарк
+					for i := 0; i < b.N; i++ {
+						lhs.ParallelMultiplication(lambda, mu, rhs)
+					}
+				})
+				b.Run(fmt.Sprintf("Sequential lhs P=%d rhs P=%d lambda=%d mu=%d", lhsP, rhsP, lambda, mu), func(b *testing.B) {
+					// Сбрасываем таймер после настройки
+					b.ReportAllocs()
+					b.ResetTimer()
+
+					// Запускаем бенчмарк
+					for i := 0; i < b.N; i++ {
+						lhs.Multiplication(lambda, mu, rhs)
+					}
+				})
+			}
+
+		}
+	}
+}
+
 // Вспомогательные функции
 
 // compareMatrices сравнивает две матрицы на идентичность
