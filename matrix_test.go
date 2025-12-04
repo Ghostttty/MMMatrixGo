@@ -530,6 +530,11 @@ func generatePairs(lhsP, rhsP uint32) [][2]uint32 {
 				continue
 			}
 
+			// Для больших матриц нужно много памяти
+			if (lhsP - l - m) + (rhsP - l - m) + l > 9 {
+				continue
+			}
+
 			pairs = append(pairs, [2]uint32{l, m})
 		}
 	}
@@ -540,7 +545,7 @@ func generatePairs(lhsP, rhsP uint32) [][2]uint32 {
 func BenchmarkFullTest(b *testing.B) {
 	X := uint32(10)
 
-	for lhsP := uint32(2); lhsP < 4; lhsP++ {
+	for lhsP := uint32(2); lhsP < 9; lhsP++ {
 
 		lhs := CreateMatrix(X, lhsP)
 
