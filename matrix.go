@@ -145,19 +145,13 @@ func (m *Matrix) ParallelMultiplication(lambda, mu uint32, other *Matrix) *Matri
 				var tempValue uint32
 
 				if mu > 0 {
-					// Создаем временные копии для инкремента
-					tempLHS := make([]uint32, len(indexLHS))
-					copy(tempLHS, indexLHS)
-					tempRHS := make([]uint32, len(indexRHS))
-					copy(tempRHS, indexRHS)
-
 					for sumIdx := uint32(0); sumIdx < muPower; sumIdx++ {
-						tempValue += m.Data[calculateIndexFromArray(tempLHS, m.X)] *
-							other.Data[calculateIndexFromArray(tempRHS, other.X)]
+						tempValue += m.Data[calculateIndexFromArray(indexLHS, m.X)] *
+							other.Data[calculateIndexFromArray(indexRHS, other.X)]
 
 						if sumIdx+1 < muPower {
-							incrementToIndexVector(tempLHS, lastLHSIndex, m.X)
-							incrementToIndexVector(tempRHS, lastRHSIndex, m.X)
+							incrementToIndexVector(indexLHS, lastLHSIndex, m.X)
+							incrementToIndexVector(indexRHS, lastRHSIndex, m.X)
 						}
 					}
 				} else {
