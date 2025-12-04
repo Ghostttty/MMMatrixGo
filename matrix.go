@@ -182,7 +182,7 @@ func updateIndexMappings(indexMatrixResult, indexLHS, indexRHS []uint32,
 		// Сопоставление для правой матрицы (правая часть)
 		rhsRightSyncIdx := len(indexMatrixResult) - 1
 		rhsRightIdx := int(rhsP - 1)
-		for i := 0; i < int(lhsP-lambda-mu); i++ {
+		for i := 0; i < int(rhsP-lambda-mu); i++ {
 			indexRHS[rhsRightIdx] = indexMatrixResult[rhsRightSyncIdx]
 			rhsRightIdx--
 			rhsRightSyncIdx--
