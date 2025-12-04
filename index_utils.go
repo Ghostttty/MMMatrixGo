@@ -26,6 +26,14 @@ func calculateIndexToArray(p uint32, x uint32, index int) []uint32 {
 	return resultVector
 }
 
+func fastCalculateIndexToArray(p uint32, x uint32, index int, result []uint32) {
+	temp := uint32(index)
+	for i := len(result) - 1; i >= 0; i-- {
+		result[i] = temp % x
+		temp /= x
+	}
+}
+
 func incrementToIndexVector(vec []uint32, lastIndex int, base uint32) {
 	for i := lastIndex; i >= 0; i-- {
 		if vec[i] == base-1 {
